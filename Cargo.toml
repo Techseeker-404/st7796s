@@ -1,0 +1,31 @@
+[package]
+name = "st7796s"
+description = "ST7796S TFT LCD driver with embedded-graphics support"
+version = "0.1.0"
+authors = ["Anand. M. L <anandml4u@gmail.com>"]
+edition = "2021"
+license = "MIT"
+repository = "will implement soon"
+keywords = ["embedded-hal-driver", "st7796s", "display", "no_std"]
+readme = "README.md"
+documentation = ""
+
+
+[dependencies]
+embedded-hal = { version = "^0.2" }
+display-interface = { version = "^0.4" }
+display-interface-spi = { version = "^0.4" }
+nb = "1.0"
+
+[dependencies.embedded-graphics-core]
+optional = true
+version = "0.3.3"
+
+[dependencies.heapless]
+optional = true
+version = "0.7"
+
+[features]
+default = ["graphics", "batch"]
+graphics = ["embedded-graphics-core"]
+batch = ["heapless", "graphics"]
