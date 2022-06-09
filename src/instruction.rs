@@ -57,8 +57,8 @@ pub enum Instruction {
     DGCTR1 = 0xE2,
     DGCTR2 = 0xE3,
     MAD_RGB = 0x08,
-   MAD_X_RIGHT = 0x40,
-   MAD_Y_UP = 0x80,
+    MAD_X_RIGHT = 0x40,
+    MAD_Y_UP = 0x80,
 }
 
    // MAD_BGR = 0x00,
