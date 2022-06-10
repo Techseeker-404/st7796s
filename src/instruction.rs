@@ -1,6 +1,6 @@
 /// ST7796S instructions.
 #[repr(u8)]
-pub enum Instruction {
+pub enum Command {
     NOP = 0x00,
     SWRESET = 0x01,
 

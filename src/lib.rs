@@ -7,4 +7,4 @@
 
 pub mod instruction;
 
-use crate::instruction::Instruction;
+use crate::instruction::Command;
