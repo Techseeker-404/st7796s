@@ -28,17 +28,20 @@ pub enum Command {
     RAMRD = 0x2E,
 
     PTLAR = 0x30,
-    VSCRDEF = 0x33,
+    VSCRDER = 0x33,
     MADCTL = 0x36,
-    VSCRSADD = 0x37,     /* Vertical Scrolling Start Address */
-    PIXFMT = 0x3A,    /* COLMOD: Pixel Format Set */
+    VSCRSADD = 0x37, // Vertical Scrolling Start Address.
+    PIXFMT = 0x3A,   // COLMOD: Pixel Format Set.
 
-    RGB_INTERFACE = 0xB0,     /* RGB Interface Signal Control */
+    RGB_INTERFACE = 0xB0, // RGB Interface Signal Control.
     FRMCTR1 = 0xB1,
     FRMCTR2 = 0xB2,
     FRMCTR3 = 0xB3,
     INVCTR = 0xB4,
-    DFUNCTR = 0xB6,     /* Display Function Control */
+    DFUNCTR = 0xB6, // Display Function Control.
+    TEOFF = 0x34,
+    TEON = 0x35,
+    VCMOFFSET= 0xC6,
 
     PWCTR1 = 0xC0,
     PWCTR2 = 0xC1,
@@ -61,8 +64,8 @@ pub enum Command {
     MAD_Y_UP = 0x80,
 }
 
-   // MAD_BGR = 0x00,
+// MAD_BGR = 0x00,
 
-   // MAD_VERTICAL = 0x20,
-   // MAD_X_LEFT = 0x00,
-   // MAD_Y_DOWN = 0x00,
+// MAD_VERTICAL = 0x20,
+// MAD_X_LEFT = 0x00,
+// MAD_Y_DOWN = 0x00,
