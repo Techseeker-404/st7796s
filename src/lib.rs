@@ -49,9 +49,52 @@ where
 #[repr(u8)] 
 #[derive(Copy, Clone)]
 pub enum Orientation {
-    Portrait = 0b0000_0000, // No Inverting.
+    //D7=0,D6=0,D5=0,D4=0,D3=0,D2=0,D1=0,D0=0 (For More refer on Datasheet MADCTL pg.no:183)
+    Portrait = 0b0000_0000, // No Inverting. Writing on none of the pins 
+    //D7=0,D6=1,D5=1,D4=0,D3=0,D2=0,D1=0,D0=0
     Landscape = 0b0110_0000, // Invert column and Row/column order.
+    //D7=1,D6=1,D5=0,D4=0,D3=0,D2=0,D1=0,D0=0
     PortraitSwapped = 0b1100_0000, // Invert Row and column order.
+    //D7=1,D6=0,D5=1,D4=0,D3=0,D2=0,D1=0,D0=0
     LandscapeSwapped = 0b1010_0000, // Invert Row and Row/column order.
 }
 
+/// Default Screen orientation set as 
+///  Landscape
+impl Default for Orientation {
+    fn default() -> Self {
+        Self::Landscape
+    }
+}
+
+///
+/// Tearing Effect Setting.
+///
+
+#[derive(Copy, Clone)]
+pub enum TearingEffect {
+    /// Disable Output.
+    Off,
+    /// Output Vertical blanking information.
+    Vertical,
+    /// Output Horizontal and vertical blanking information.
+    HorizontalVertical,
+}
+
+/// 
+/// Backlight State Setting.
+/// 
+#[derive(Copy, Clone, Debug)]
+pub enum BacklightState {
+    ON,
+    OFF,
+}
+
+///
+/// Error Referring to its source (pins or SPI)
+///
+#[derive(Debug)]
+pub enum Error<PinE> {
+    DisplayError,
+    Pin(PinE),
+}
