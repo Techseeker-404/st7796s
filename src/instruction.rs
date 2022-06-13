@@ -64,8 +64,3 @@ pub enum Command {
     MAD_Y_UP = 0x80,
 }
 
-// MAD_BGR = 0x00,
-
-// MAD_VERTICAL = 0x20,
-// MAD_X_LEFT = 0x00,
-// MAD_Y_DOWN = 0x00,
