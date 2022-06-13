@@ -23,7 +23,7 @@ pub enum Command {
     DISPON = 0x29,
 
     CASET = 0x2A,
-    PASET = 0x2B,
+    RASET = 0x2B,
     RAMWR = 0x2C,
     RAMRD = 0x2E,
 
