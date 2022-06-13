@@ -99,7 +99,7 @@ pub enum Error<PinE> {
     DisplayError,
     Pin(PinE),
 }
-
+ 
 // Trait Implementation of ST7796.
 
 impl<DI, RST, BL, PinE> ST7796<DI, RST, BL>
@@ -185,6 +185,129 @@ where
         Ok(())
     }
 
+    /// 
+    /// Method to set the state of BacklightState
+    ///
+    pub fn set_backlight(
+        &mut self, state: BacklightState, 
+        delay_source: &mut impl DelayUs<u32>
+    ) -> Result<(), Error<PinE>> {
+        if let Some(bl) = self.bl.as_mut() {
+            match state {
+                BacklightState::ON => bl.set_high().map_err(Error::Pin)?,
+                BacklightState::OFF => bl.set_low().map_err(Error::Pin)?,
+            }
+            delay_source.delay_us(10);
+        }
+    
+        Ok(())
+    }
+
+    ///
+    /// Returns the current state of display orientation.
+    ///
+    pub fn orientation(&self) -> Orientation {
+        self.orientation
+    }
+    
+    ///
+    /// Sets a new state of display orientation.
+    ///
+    pub fn set_orientation(&mut self, orientation: Orientation) -> Result<(), Error<PinE>> {
+        self.write_command(Command::MADCTL)?;
+        self.write_data(&[orientation as u8])?;
+        self.orientation = orientation;
+
+        Ok(())
+    }
+    
+    /// 
+    /// Sets a pixel color at the given coords.
+    ///
+    /// # Arguments
+    ///
+    /// * `x` - X  coordinate.
+    /// * `y` - Y  coordinate.
+    /// * `color` - the Rgb565 color value
+    ///
+    pub fn set_pixel(&mut self, x: u16, y:u16, color: u16) -> Result<(), Error<PinE>> {
+        self.set_address_window(x, y, x, y)?;
+        self.write_command(Command::RAMWR)?;
+        self.di
+            .send_data(U16BEIter(&mut once(color)))
+            .map_err(|_| Error::DisplayError)?;
+
+        Ok(())
+    }
+    
+    ///
+    /// Sets pixel colors in given rectangle bounds.
+    ///
+    /// # Arguments
+    ///
+    /// * `sx` - x coordinate start
+    /// * `sy` - y coordinate start
+    /// * `ex` - x coordinate end
+    /// * `ey` - y coordinate end
+    /// * `colors` - anything that can provide `IntoIterator<Item = u16>` to iterate over pixel data
+    ///
+    pub fn set_pixels<T>(
+        &mut self,
+        sx: u16, sy: u16,
+        ex: u16, ey: u16,
+        colors: T,
+    ) -> Result<(), Error<PinE>>
+    where
+        T: IntoIterator<Item = u16>,
+    {
+        self.set_address_window(sx, sy, ex, ey)?;
+        self.write_command(Command::RAMWR)?;
+        self.di
+            .send_data(U16BEIter(&mut colors.into_iter()))
+            .map_err(|_| Error::DisplayError)
+    }
+    
+    ///
+    /// Sets scroll offset "shifting" the displayed picture
+    /// # Arguments
+    ///
+    /// * `offset` - scroll offset in pixels
+    ///
+    pub fn set_scroll_offset(&mut self, offset: u16) -> Result<(), Error<PinE>> {
+        self.write_command(Command::VSCRSADD)?;
+        self.write_data(&offset.to_be_bytes())
+    }
+
+    ///
+    /// Release resources allocated to this driver back.
+    /// This returns the display interface and the RST pin; deconstructing the driver.
+    ///
+    pub fn release(self) -> (DI, Option<RST>, Option<BL>) {
+        (self.di, self.rst, self.bl)
+    }
+
+    ///
+    /// Configures the tearing effect output.
+    ///
+    pub fn set_tearing_effect(&mut self, tearing_effect: TearingEffect) -> Result<(), Error<PinE>> {
+        match tearing_effect {
+            TearingEffect::Off => self.write_command(Command::TEOFF),
+
+            TearingEffect::Vertical => {
+                self.write_command(Command::TEON)?;
+                self.write_data(&[0])
+            }
+
+            TearingEffect::HorizontalVertical => {
+                self.write_command(Command::TEON)?;
+                self.write_data(&[1])
+            }
+        }
+
+    }
+
+    // --- Private Functions --- //
+
     /// Private method:Writing Data utilising the `send_commands` method of display_interface crate.
     fn write_command(&mut self, command: Command) -> Result<(), Error<PinE>> {
         self.di
@@ -214,4 +337,5 @@ where
 
         Ok(())
     }
+
 }
