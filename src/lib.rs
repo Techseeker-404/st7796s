@@ -16,8 +16,8 @@ use embedded_hal::blocking::delay::DelayUs;
 use embedded_hal::digital::v2::OutputPin;
 
 
-// TODO #[cfg(feature = "graphics")]
-// mod graphics;
+#[cfg(feature = "graphics")]
+mod graphics;
 
 #[cfg(feature = "batch")]
 mod batch;
