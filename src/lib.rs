@@ -19,8 +19,8 @@ use embedded_hal::digital::v2::OutputPin;
 // TODO #[cfg(feature = "graphics")]
 // mod graphics;
 
-// TODO #[cfg(feature = "batch")]
-// mod batch;
+#[cfg(feature = "batch")]
+mod batch;
 
 ///
 /// ST7796S driver to connect with TFT Display.
